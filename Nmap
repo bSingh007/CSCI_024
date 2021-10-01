@@ -1,6 +1,8 @@
 Nmap
 Task 1: Used Orcale Virtual Box to run Kali Linux OS
+
 Task 2: Learned every computer has a max of 65,535 ports. Ports are networking constructs used to direct traffic to the right application on a server.
+
 Task 3: Nmap is a pentesting tool ran from the terminal. Switches, or command arguments tell a program to do different things. For example,
 -sS	is the first switch listed in the help menu for a Syn Scan
 -sU	for a UDP scan
@@ -27,11 +29,65 @@ Used to increase scan speeds. (Higher speeds are noisier, and can have errors)
 --script=vuln		activates all scripts in the “vuln” category
 
 Task 4
+Port Scanning:
+
+These are the 3 basic scan type, but others do exist.
+    TCP Connect Scans -st
+    SYN "Half-Open" Scans -sS
+    UDP Scans -sU
+    
 Task 5
+       TCP Connection three-way handshake - Tries to connect each 
+       specified TCP port to determine if ther service is open by the 
+       response it recieves.
+       
+       Filtered ports - A Firewall is in place. Firewalls are configured
+       to drop incoming packets.
+       
+       Configuring a fire to respond w/ a RST TCP packet:
+       IPtables for Linux:
+       iptables -I INPUT -p tcp --dport <port> -j REJECT --reject-with tcp-reset
+
 Task 6
+      SYN scans are also called: "Half-Open", "Stealth"
+      Nmap cannot use SYN scans without sudo permission.
+      SYN scans are faster than TCP connect scans.
+
 Task 7
+      UDP scans - stateless:
+      Doesn't rely on a "handshake". Simply sends packets to target port
+      in hope that it will make it.
+      Nmap refers to the port being open|filtered if no response, sends twice,
+      no response... moves on.
+      If sent to Closed UDP port, target responds w/ ICMP ping packet.
+      UDP scans are slow compared to TCP scans. Best to scan just top UDP ports:
+      Commands:
+      --top-ports <number>
+      nmap -sU --top-ports 20 <target>
+      The Switch for Nmap UDP scan:  -sU
+      
 Task 8
+      Null, FIN, Xmas scans are stealiter than SYN scans
+      Null: -sN
+      TCP request sent w/ no flag set at all.
+      FIN scan: -sF
+      Similar to Null, but instead of empty packet.
+      The request is sent w/ FIN flag. This is used to close an active connection.
+      Nmap will expect a RST if port is closed.
+      Xmas scans: -sX
+      Send malformed TCP packet, expects a RST response for closed ports.
+      Flag that it sets: (PSH, URG, FIN) - wireshark.
+      NULL, FIN, & Xmas scans are generally used for Firewall Evasion.
+      
 Task 9
+ ping sweep: -sn
+ nmap -sn (ip ranges address) ---ex:
+ nmap -sn 192.168.0.0/24
+ -sn: tells Nmap to not scan any ports, forcing it to rely on ICMP echo packets
+ or ARP requests, if w/ sudo.
+ ICMP echo qestions causes nmap to send TCP SYN packet to port 443 of target.
+ Also TCP ACK or TCP SYN packet to port 80 of target.
+
 Task 10
 Nmap Scripting Engine (NSE):
 NSE Scripts are written in the Lua programming language.
@@ -67,9 +123,11 @@ can be used to determine the presence of a firewall/IDS
 ICMP			a frequently relied upon protocol that is often blocked. 
 Requires the use of the –Pn switch.
 --data-length		appends an arbitrary length of random data to end of packets.
+
 Task 14
 Scanned Target Machine: Does not respond to ICMP (ping) requests.
 Scanned w/ Xmas scan on first 999 ports of target IP – 999 ports open or filtered
+
 Task 15
 Conclusion:	Learned using nmap docs is best at a point reference.
 
